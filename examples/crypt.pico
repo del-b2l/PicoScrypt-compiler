@@ -24,3 +24,4 @@ world Crypt:
         requires inv has key
         unlock door_open
     end
+end
