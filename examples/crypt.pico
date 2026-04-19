@@ -10,3 +10,17 @@ world Crypt:
         item gem
         go north -> chamber requires flag door_open
     end
+    item gem:
+        use:
+            say "The gem clicks into place."
+        end
+    end
+    room chamber:
+        on enter:
+            win "You escaped!"
+        end
+    end
+    puzzle gate:
+        requires inv has key
+        unlock door_open
+    end
