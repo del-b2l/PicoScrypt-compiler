@@ -1,0 +1,12 @@
+world Crypt:
+    flag door_open = false
+    player:
+        inv key
+    end
+    item key:
+        examine: "An old iron key."
+    end
+    room entrance:
+        item gem
+        go north -> chamber requires flag door_open
+    end
