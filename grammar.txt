@@ -1,0 +1,41 @@
+program         ::= world_block
+
+world_block     ::= "world" IDENT ":" world_body "end"
+world_body      ::= { flag_decl | player_block | item_block | room_block | puzzle_block }
+
+flag_decl       ::= "flag" IDENT "=" bool_literal
+bool_literal    ::= "true" | "false"
+
+player_block    ::= "player" ":" { inv_decl } "end"
+inv_decl        ::= "inv" IDENT
+
+item_block      ::= "item" IDENT ":" { item_action } "end"
+item_action     ::= examine_action | use_action
+examine_action  ::= "examine" ":" STRING
+use_action      ::= "use" ":" { statement } "end"
+
+room_block      ::= "room" IDENT ":" { room_body } "end"
+room_body       ::= item_ref | exit_stmt | on_enter_block
+item_ref        ::= "item" IDENT
+exit_stmt       ::= "go" direction "->" IDENT [ "requires" condition ]
+direction       ::= "north" | "south" | "east" | "west"
+
+on_enter_block  ::= "on" "enter" ":" { statement } "end"
+
+puzzle_block    ::= "puzzle" "gate" ":" puzzle_body "end"
+puzzle_body     ::= requires_clause unlock_stmt
+requires_clause ::= "requires" condition
+unlock_stmt     ::= "unlock" IDENT
+
+npc_block       ::= "npc" IDENT ":" { dialogue_block } "end"
+dialogue_block  ::= "talk" ":" { dialogue_branch } "end"
+dialogue_branch ::= "if" condition { statement } [ "else" { statement } ] "end"
+                  | statement
+
+condition       ::= "flag" IDENT
+                  | "inv" "has" IDENT
+
+statement       ::= say_stmt | win_stmt | lose_stmt
+say_stmt        ::= "say" STRING
+win_stmt        ::= "win" STRING
+lose_stmt       ::= "lose" STRING
