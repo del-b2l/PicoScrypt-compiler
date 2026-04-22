@@ -15,11 +15,12 @@ def run_parser(source_text: str, debug: bool = False):
     semantic.analyze(ast)
 
     if debug:
-        print("=== TOKENS ===")
+        print("TOKENS\n")
         for tok in tokens:
             print(tok)
-        print("\n=== AST ===")
+        print("\n\nAST\n")
         print_ast(ast)
+        print()
         print()
         semantic.dump_symbol_table()
     return ast
