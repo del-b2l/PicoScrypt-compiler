@@ -53,6 +53,9 @@ class TACGenerator:
         self.label_counter += 1
         return f"{prefix}_{self.label_counter}"
 
+    def _clean_name(self, raw: str):
+        return "".join(ch if ch.isalnum() else "_" for ch in raw).upper()
+
     def _emit(self, text: str):
         self.instructions.append(text)
 
@@ -77,22 +80,30 @@ class TACGenerator:
             elif isinstance(stmt, WinStmt):
                 self._emit(f'PRINT "{stmt.text}"')
                 self._emit("HALT")
+                return True
             elif isinstance(stmt, LoseStmt):
                 self._emit(f'PRINT "{stmt.text}"')
                 self._emit("HALT")
+                return True
+        return False
 
     def _emit_room_on_enter(self, room_node: RoomNode):
         for part in room_node.body:
             if isinstance(part, OnEnterBlock):
-                enter_label = f"room_{room_node.name}_enter"
+                room_name = self._clean_name(room_node.name)
+                enter_label = f"ROOM_{room_name}_ENTER"
+                end_label = f"ROOM_{room_name}_END"
                 self._emit_label(enter_label)
-                self._emit_statements(part.statements)
-                self._emit(f"goto END_{enter_label}")
-                self._emit_label(f"END_{enter_label}")
+                terminated = self._emit_statements(part.statements)
+                if not terminated:
+                    self._emit(f"goto {end_label}")
+                self._emit_label(end_label)
 
     def _emit_puzzle(self, puzzle_node: PuzzleNode):
-        unlock_label = f"UNLOCK_{puzzle_node.unlock_flag}"
-        end_label = self._new_label("END_puzzle")
+        flag_name = self._clean_name(puzzle_node.unlock_flag)
+        suffix = self._new_label("PZ").split("_")[-1]
+        unlock_label = f"PUZZLE_{flag_name}_UNLOCK_{suffix}"
+        end_label = f"PUZZLE_{flag_name}_END_{suffix}"
 
         cond_temp = self._emit_condition_eval(puzzle_node.condition)
         self._emit(f"if {cond_temp} goto {unlock_label}")
