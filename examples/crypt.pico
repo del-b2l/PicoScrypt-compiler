@@ -25,3 +25,7 @@ world Crypt:
         unlock door_open
     end
 end
+
+// TAC notes (when debugging):
+//    001: PRINT "You escaped!" and 002: HALT come from the room on enter win block.
+//    003: goto END_room_chamber_enter is dead/unreachable after HALT (safe, but redundant).

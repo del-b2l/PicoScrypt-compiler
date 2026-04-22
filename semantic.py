@@ -50,7 +50,7 @@ class SemanticAnalyzer:
     # debug printer
     def dump_symbol_table(self):
         world = self.symbols["world"]
-        print("SYMBOL TABLE")
+        print("SYMBOL TABLE\n")
         print("world.flags:")
         for flag_name in sorted(world["flags"]):
             print(f"  - {flag_name}: bool")
