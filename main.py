@@ -5,6 +5,7 @@ import argparse
 from lexer import tokenize
 from parser import Parser, print_ast
 from semantic import SemanticAnalyzer, SemanticError
+from codegen import TACGenerator
 
 
 def run_parser(source_text: str, debug: bool = False):
@@ -13,6 +14,8 @@ def run_parser(source_text: str, debug: bool = False):
     ast = parser.parse_program()
     semantic = SemanticAnalyzer()
     semantic.analyze(ast)
+    tac_gen = TACGenerator()
+    tac_gen.generate(ast)
 
     if debug:
         print("TOKENS\n")
@@ -23,6 +26,9 @@ def run_parser(source_text: str, debug: bool = False):
         print()
         print()
         semantic.dump_symbol_table()
+        print()
+        print()
+        tac_gen.dump_tac()
     return ast
 
 
