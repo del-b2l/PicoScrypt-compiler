@@ -1,3 +1,5 @@
+# run "python3 main.py examples/crypt.pico --debug" in terminal
+
 import argparse
 
 from lexer import tokenize
