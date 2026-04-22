@@ -28,6 +28,7 @@ class GameRuntime:
         self.room_items = {}
         self.current_room = None
         self.game_over = False
+        self._triggered_puzzles = set()
         self._build_state()
 
     def _build_state(self):
@@ -60,7 +61,6 @@ class GameRuntime:
         self.current_room = room_order[0]
 
     def run(self):
-        self._apply_puzzles()
         self._enter_room(self.current_room, initial=True)
         while not self.game_over:
             raw = input("\n> ").strip()
@@ -98,8 +98,6 @@ class GameRuntime:
             print("Give command is recognized but not yet modeled in this phase.")
         else:
             print("Unknown command. Type 'help' for available commands.")
-
-        self._apply_puzzles()
 
     def _current_room_node(self):
         return self.rooms[self.current_room]
@@ -153,10 +151,16 @@ class GameRuntime:
         node = self.items.get(item)
         if not node:
             print("Nothing happens.")
+            self._apply_puzzles()
             return
+        executed_use_action = False
         for action in node.actions:
             if action.__class__.__name__ == "UseAction":
                 self._exec_statements(action.statements)
+                executed_use_action = True
+        if not executed_use_action:
+            print("Nothing happens.")
+        self._apply_puzzles()
 
     def _examine(self, item: str):
         if item not in self.inventory and item not in self.room_items[self.current_room]:
@@ -204,9 +208,12 @@ class GameRuntime:
         return False
 
     def _apply_puzzles(self):
-        for puzzle in self.puzzles:
+        for idx, puzzle in enumerate(self.puzzles):
+            if idx in self._triggered_puzzles:
+                continue
             if self._eval_condition(puzzle.condition):
                 self.flags[puzzle.unlock_flag] = True
+                self._triggered_puzzles.add(idx)
 
     def _exec_statements(self, statements):
         for stmt in statements:
