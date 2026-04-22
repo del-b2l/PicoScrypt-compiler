@@ -6,6 +6,7 @@ from lexer import tokenize
 from parser import Parser, print_ast
 from semantic import SemanticAnalyzer, SemanticError
 from codegen import TACGenerator
+from interpreter import GameRuntime
 
 
 def run_parser(source_text: str, debug: bool = False):
@@ -42,11 +43,14 @@ def main():
         source = f.read()
 
     try:
-        run_parser(source, debug=args.debug)
+        ast = run_parser(source, debug=args.debug)
     except SemanticError as err:
         print("Semantic analysis failed:")
         print(err)
         raise SystemExit(1)
+
+    runtime = GameRuntime(ast)
+    runtime.run()
 
 
 if __name__ == "__main__":
