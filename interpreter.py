@@ -110,7 +110,7 @@ class GameRuntime:
         exits = [e.direction for e in self._room_exits(room)]
         print(f"You are in {self.current_room}.")
         if self.room_items[self.current_room]:
-            print("You see:", ", ".join(sorted(self.room_items[self.current_room])))
+            print("\nYou see:", ", ".join(sorted(self.room_items[self.current_room])))
         else:
             print("You see: nothing useful.")
         if exits:
@@ -151,7 +151,9 @@ class GameRuntime:
         node = self.items.get(item)
         if not node:
             print("Nothing happens.")
-            self._apply_puzzles()
+            unlocked = self._apply_puzzles()
+            for flag_name in unlocked:
+                print(f"You hear a mechanism unlock ({flag_name}).")
             return
         executed_use_action = False
         for action in node.actions:
@@ -160,7 +162,9 @@ class GameRuntime:
                 executed_use_action = True
         if not executed_use_action:
             print("Nothing happens.")
-        self._apply_puzzles()
+        unlocked = self._apply_puzzles()
+        for flag_name in unlocked:
+            print(f"You hear a mechanism unlock ({flag_name}).")
 
     def _examine(self, item: str):
         if item not in self.inventory and item not in self.room_items[self.current_room]:
@@ -208,12 +212,15 @@ class GameRuntime:
         return False
 
     def _apply_puzzles(self):
+        unlocked_flags = []
         for idx, puzzle in enumerate(self.puzzles):
             if idx in self._triggered_puzzles:
                 continue
             if self._eval_condition(puzzle.condition):
                 self.flags[puzzle.unlock_flag] = True
                 self._triggered_puzzles.add(idx)
+                unlocked_flags.append(puzzle.unlock_flag)
+        return unlocked_flags
 
     def _exec_statements(self, statements):
         for stmt in statements:
