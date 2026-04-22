@@ -89,6 +89,33 @@ class PuzzleNode:
     def __repr__(self):
         return f'PuzzleNode(requires={self.condition}, unlock={self.unlock_flag!r})'
 
+class NPCNode:
+    def __init__(self, name, dialogues):
+        self.name = name              # string
+        self.dialogues = dialogues    # list of DialogueNode
+
+    def __repr__(self):
+        return f'NPCNode({self.name!r}, {self.dialogues})'
+
+class DialogueNode:
+    def __init__(self, branches):
+        self.branches = branches      # list of DialogueBranch
+
+    def __repr__(self):
+        return f'DialogueNode({self.branches})'
+
+class DialogueBranch:
+    def __init__(self, condition, if_statements, else_statements=None):
+        self.condition = condition                    # ConditionFlag/ConditionInv or None
+        self.if_statements = if_statements            # list of statements
+        self.else_statements = else_statements or []  # list of statements
+
+    def __repr__(self):
+        return (
+            f'DialogueBranch(condition={self.condition}, '
+            f'if={self.if_statements}, else={self.else_statements})'
+        )
+
 class ConditionFlag:
     def __init__(self, flag_name):
         self.flag_name = flag_name
