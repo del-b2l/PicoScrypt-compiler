@@ -4,12 +4,15 @@ import argparse
 
 from lexer import tokenize
 from parser import Parser, print_ast
+from semantic import SemanticAnalyzer, SemanticError
 
 
 def run_parser(source_text: str, debug: bool = False):
     tokens = tokenize(source_text)
     parser = Parser(tokens)
     ast = parser.parse_program()
+    semantic = SemanticAnalyzer()
+    symbols = semantic.analyze(ast)
 
     if debug:
         print("=== TOKENS ===")
@@ -17,8 +20,10 @@ def run_parser(source_text: str, debug: bool = False):
             print(tok)
         print("\n=== AST ===")
         print_ast(ast)
+        print()
+        semantic.dump_symbol_table()
 
-    return ast
+    return ast, symbols
 
 
 def main():
@@ -30,7 +35,12 @@ def main():
     with open(args.source_file, "r", encoding="utf-8") as f:
         source = f.read()
 
-    run_parser(source, debug=args.debug)
+    try:
+        run_parser(source, debug=args.debug)
+    except SemanticError as err:
+        print("Semantic analysis failed:")
+        print(err)
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
