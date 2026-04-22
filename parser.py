@@ -172,12 +172,16 @@ class Parser:
         self.consume('PUZZLE')
         self.consume('GATE')
         self.consume('COLON')
+        room_name = None
+        if self.match('ROOM'):
+            self.consume('ROOM')
+            room_name = self.consume('IDENT').value
         self.consume('REQUIRES')
         condition = self.parse_condition()
         self.consume('UNLOCK')
         unlock_flag = self.consume('IDENT').value
         self.consume('END')
-        return PuzzleNode(condition, unlock_flag)
+        return PuzzleNode(condition, unlock_flag, room_name)
 
     def parse_npc_block(self):
         self.consume('NPC')

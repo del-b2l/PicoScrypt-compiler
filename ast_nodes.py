@@ -82,12 +82,16 @@ class OnEnterBlock:
         return f'OnEnterBlock({self.statements})'
 
 class PuzzleNode:
-    def __init__(self, condition, unlock_flag):
+    def __init__(self, condition, unlock_flag, room_name=None):
         self.condition   = condition    # ConditionNode
         self.unlock_flag = unlock_flag  # string
+        self.room_name = room_name      # optional room scope string
 
     def __repr__(self):
-        return f'PuzzleNode(requires={self.condition}, unlock={self.unlock_flag!r})'
+        return (
+            f'PuzzleNode(requires={self.condition}, unlock={self.unlock_flag!r}, '
+            f'room={self.room_name!r})'
+        )
 
 class NPCNode:
     def __init__(self, name, dialogues):

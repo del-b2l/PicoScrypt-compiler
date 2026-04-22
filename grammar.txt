@@ -23,7 +23,8 @@ direction       ::= "north" | "south" | "east" | "west"
 on_enter_block  ::= "on" "enter" ":" { statement } "end"
 
 puzzle_block    ::= "puzzle" "gate" ":" puzzle_body "end"
-puzzle_body     ::= requires_clause unlock_stmt
+puzzle_body     ::= [ room_scope ] requires_clause unlock_stmt
+room_scope      ::= "room" IDENT
 requires_clause ::= "requires" condition
 unlock_stmt     ::= "unlock" IDENT
 

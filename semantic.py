@@ -163,7 +163,15 @@ class SemanticAnalyzer:
 
     def _check_puzzle(self, puzzle_node: PuzzleNode):
         self._check_condition(puzzle_node.condition, "puzzle gate")
-        self.symbols["locals"]["puzzles"].append(self._condition_to_string(puzzle_node.condition))
+        room_hint = f" @room {puzzle_node.room_name}" if puzzle_node.room_name else ""
+        self.symbols["locals"]["puzzles"].append(
+            f"{self._condition_to_string(puzzle_node.condition)}{room_hint}"
+        )
+
+        if puzzle_node.room_name and puzzle_node.room_name not in self.symbols["world"]["rooms"]:
+            self.errors.append(
+                f"Puzzle gate references undeclared room '{puzzle_node.room_name}'."
+            )
 
         if puzzle_node.unlock_flag not in self.symbols["world"]["flags"]:
             self.errors.append(

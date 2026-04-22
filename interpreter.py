@@ -149,22 +149,26 @@ class GameRuntime:
             print("You need to carry that item first.")
             return
         node = self.items.get(item)
+        unlocked = []
         if not node:
-            print("Nothing happens.")
-            unlocked = self._apply_puzzles()
-            for flag_name in unlocked:
-                print(f"You hear a mechanism unlock ({flag_name}).")
+            unlocked = self._apply_puzzles(used_item=item)
+            if unlocked:
+                for flag_name in unlocked:
+                    print(f"You hear a mechanism unlock ({flag_name}).")
+            else:
+                print("Nothing happens.")
             return
         executed_use_action = False
         for action in node.actions:
             if action.__class__.__name__ == "UseAction":
                 self._exec_statements(action.statements)
                 executed_use_action = True
-        if not executed_use_action:
+        unlocked = self._apply_puzzles(used_item=item)
+        if unlocked:
+            for flag_name in unlocked:
+                print(f"You hear a mechanism unlock ({flag_name}).")
+        elif not executed_use_action:
             print("Nothing happens.")
-        unlocked = self._apply_puzzles()
-        for flag_name in unlocked:
-            print(f"You hear a mechanism unlock ({flag_name}).")
 
     def _examine(self, item: str):
         if item not in self.inventory and item not in self.room_items[self.current_room]:
@@ -211,11 +215,18 @@ class GameRuntime:
             return condition.item_name in self.inventory
         return False
 
-    def _apply_puzzles(self):
+    def _apply_puzzles(self, used_item=None):
         unlocked_flags = []
         for idx, puzzle in enumerate(self.puzzles):
             if idx in self._triggered_puzzles:
                 continue
+            if puzzle.room_name and puzzle.room_name != self.current_room:
+                continue
+
+            if isinstance(puzzle.condition, ConditionInv) and used_item is not None:
+                if puzzle.condition.item_name != used_item:
+                    continue
+
             if self._eval_condition(puzzle.condition):
                 self.flags[puzzle.unlock_flag] = True
                 self._triggered_puzzles.add(idx)

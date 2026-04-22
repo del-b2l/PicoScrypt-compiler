@@ -21,6 +21,7 @@ world Crypt:
         end
     end
     puzzle gate:
+        room entrance
         requires inv has key
         unlock door_open
     end
