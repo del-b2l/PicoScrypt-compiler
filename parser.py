@@ -56,6 +56,8 @@ class Parser:
                 body.append(self.parse_room_block())
             elif self.match('PUZZLE'):
                 body.append(self.parse_puzzle_block())
+            elif self.match('NPC'):
+                body.append(self.parse_npc_block())
             else:
                 tok = self.current()
                 raise SyntaxError(f'Line {tok.line}: unexpected token {tok.type} ({tok.value!r}) in world body')
@@ -144,7 +146,12 @@ class Parser:
 
     def parse_exit_stmt(self):
         self.consume('GO')
-        direction = self.consume(self.peek()).value # north/south/east/west
+        if not self.match('NORTH', 'SOUTH', 'EAST', 'WEST'):
+            tok = self.current()
+            raise SyntaxError(
+                f'Line {tok.line}: expected direction (north/south/east/west), got {tok.type}'
+            )
+        direction = self.consume(self.peek()).value
         self.consume('ARROW')
         target = self.consume('IDENT').value
         condition = None
@@ -171,6 +178,47 @@ class Parser:
         unlock_flag = self.consume('IDENT').value
         self.consume('END')
         return PuzzleNode(condition, unlock_flag)
+
+    def parse_npc_block(self):
+        self.consume('NPC')
+        name = self.consume('IDENT').value
+        self.consume('COLON')
+        dialogues = []
+        while not self.match('END', 'EOF'):
+            if self.match('TALK'):
+                dialogues.append(self.parse_dialogue_block())
+            else:
+                tok = self.current()
+                raise SyntaxError(f'Line {tok.line}: unexpected token {tok.type} in npc block')
+        self.consume('END')
+        return NPCNode(name, dialogues)
+
+    def parse_dialogue_block(self):
+        self.consume('TALK')
+        self.consume('COLON')
+        branches = []
+        while not self.match('END', 'EOF'):
+            branches.append(self.parse_dialogue_branch())
+        self.consume('END')
+        return DialogueNode(branches)
+
+    def parse_dialogue_branch(self):
+        if self.match('IF'):
+            self.consume('IF')
+            condition = self.parse_condition()
+            if_statements = self.parse_statements()
+            else_statements = []
+            if self.match('ELSE'):
+                self.consume('ELSE')
+                else_statements = self.parse_statements()
+            self.consume('END')
+            return DialogueBranch(condition, if_statements, else_statements)
+
+        statements = self.parse_statements()
+        if not statements:
+            tok = self.current()
+            raise SyntaxError(f'Line {tok.line}: expected statement or if-branch in talk block')
+        return DialogueBranch(None, statements, [])
 
     def parse_condition(self):
         if self.match('FLAG'):
@@ -258,6 +306,31 @@ def print_ast(node, indent=0):
     elif isinstance(node, PuzzleNode):
         print(f"{pad}PuzzleNode(unlock={node.unlock_flag!r})")
         print_ast(node.condition, indent + 1)
+
+    elif isinstance(node, NPCNode):
+        print(f"{pad}NPCNode({node.name!r})")
+        for dialogue in node.dialogues:
+            print_ast(dialogue, indent + 1)
+
+    elif isinstance(node, DialogueNode):
+        print(f"{pad}DialogueNode")
+        for branch in node.branches:
+            print_ast(branch, indent + 1)
+
+    elif isinstance(node, DialogueBranch):
+        if node.condition is None:
+            print(f"{pad}DialogueBranch(default)")
+        else:
+            print(f"{pad}DialogueBranch(if)")
+            print_ast(node.condition, indent + 1)
+        if node.if_statements:
+            print(f"{pad}  then:")
+            for stmt in node.if_statements:
+                print_ast(stmt, indent + 2)
+        if node.else_statements:
+            print(f"{pad}  else:")
+            for stmt in node.else_statements:
+                print_ast(stmt, indent + 2)
 
     elif isinstance(node, ConditionFlag):
         print(f"{pad}ConditionFlag({node.flag_name!r})")
