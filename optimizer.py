@@ -345,11 +345,19 @@ class TACOptimizer:
             - goto L; <comments>; L:  -->  drop the goto (it jumps to itself)
             - consecutive identical PRINT  -->  keep only the first
             - labels never targeted by any jump  -->  drop
+
+            updates
+            -------
+              - tracks when a dead label is removed
+              - keeps eliminating subsequent non-label instructions as out.append(f"// ELIMINATED (dead after removed label): {instr}")
+              - stops elimination when a live label is encountered again
         """
         live_labels = _all_goto_targets(instrs)
 
         out: list[str] = []
         i = 0
+        dead = False
+        entry_label_preserved = False
         while i < len(instrs):
             instr  = instrs[i]
             stripped = instr.strip()
@@ -359,14 +367,38 @@ class TACOptimizer:
                 i += 1
                 continue
 
-            # dead label removal
             if _is_label(stripped):
                 lname = _label_name(stripped)
+
+                # preserve the entry label even if it isn't targeted by a goto
+                if _is_top_level_label(stripped) and not entry_label_preserved:
+                    entry_label_preserved = True
+                    dead = False
+                    out.append(instr)
+                    i += 1
+                    continue
+
+                if dead:
+                    if lname in live_labels:
+                        dead = False
+                        out.append(instr)
+                    else:
+                        out.append(f"// ELIMINATED (dead label): {instr}")
+                        self._stats["peephole_dead_labels"] += 1
+                    i += 1
+                    continue
+
                 if lname not in live_labels:
                     out.append(f"// ELIMINATED (dead label): {instr}")
                     self._stats["peephole_dead_labels"] += 1
+                    dead = True
                     i += 1
                     continue
+
+            if dead:
+                out.append(f"// ELIMINATED (dead after removed label): {instr}")
+                i += 1
+                continue
 
             # redundant goto: goto L and next real instr is label L
             # look ahead past comments for the next real instruction
@@ -407,6 +439,7 @@ if __name__ == "__main__":
       test A — crypt.pico output
           reproduces exactly what codegen.py emits for crypt.pico.
           key facts: player has 'key' in inventory; door_open starts False.
+
           expected:
             - inv_has(key) --> true  (constant folded, branch always taken)
             - flag(door_open) --> false (constant folded, branch eliminated)
@@ -416,6 +449,11 @@ if __name__ == "__main__":
       test B — duplicate PRINT peephole
           2 identical consecutive PRINT instructions; the second must
           be removed by Pass 3.
+
+      test C — dead label body elimination
+            a conditional jump whose condition is always false, so the target
+            label is never jumped to. the label and all instructions after it
+            until the next top-level label should be removed as dead code by Pass 3!
     """
 
     print("=" * 60)
@@ -465,3 +503,22 @@ if __name__ == "__main__":
     opt_b = TACOptimizer({"light_on": False}, set()) # player has no items
     out_b = opt_b.optimize(raw_b)
     opt_b.dump_comparison(raw_b, out_b)
+
+    print()
+    print("=" * 60)
+    print("TEST C  —  dead label body elimination")
+    print("=" * 60)
+
+    raw_c = [
+        "ROOM_SHIP_ENTER:",
+        "t1 = false",
+        "if t1 goto PUZZLE_HULL_PATCHED_UNLOCK_1",
+        "goto PUZZLE_HULL_PATCHED_END_1",
+        "PUZZLE_HULL_PATCHED_UNLOCK_1:",
+        "hull_patched = true",
+        "PUZZLE_HULL_PATCHED_END_1:",
+    ]
+
+    opt_c = TACOptimizer({}, set())
+    out_c = opt_c.optimize(raw_c)
+    opt_c.dump_comparison(raw_c, out_c)
