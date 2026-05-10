@@ -1,0 +1,36 @@
+// lighthouse.pico — uses NPC dialogue with flag condition
+// Tests: npc block, talk, if/else dialogue branch
+world Lighthouse:
+    flag lamp_lit = false
+    player:
+        inv oil
+    end
+    item oil:
+        examine: "A flask of lamp oil."
+        use:
+            say "You pour the oil into the lamp reservoir."
+        end
+    end
+    room shore:
+        go north -> tower requires flag lamp_lit
+    end
+    room tower:
+        on enter:
+            win "The beam sweeps out to sea. The ship is saved!"
+        end
+    end
+    npc keeper:
+        talk:
+            if flag lamp_lit
+                say "The lamp burns bright. Well done."
+            else
+                say "The lamp is dark. Find oil to light it."
+            end
+        end
+    end
+    puzzle gate:
+        room shore
+        requires inv has oil
+        unlock lamp_lit
+    end
+end

@@ -1,0 +1,32 @@
+// tomb.pico — two-room puzzle using inv condition
+// Tests: inv has, on enter lose, multi-item player
+world Tomb:
+    flag sarcophagus_open = false
+    player:
+        inv torch
+        inv scarab
+    end
+    item torch:
+        examine: "A flickering wooden torch."
+    end
+    item scarab:
+        examine: "A golden scarab amulet."
+        use:
+            say "The scarab glows and fits into the door."
+        end
+    end
+    room antechamber:
+        item torch
+        go east -> burial_chamber requires flag sarcophagus_open
+    end
+    room burial_chamber:
+        on enter:
+            win "You have disturbed the pharaoh. The treasure is yours!"
+        end
+    end
+    puzzle gate:
+        room antechamber
+        requires inv has scarab
+        unlock sarcophagus_open
+    end
+end

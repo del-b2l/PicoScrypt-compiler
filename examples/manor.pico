@@ -1,0 +1,35 @@
+// manor.pico — lose condition on enter, flag starts true
+// Tests: on enter lose, flag = true initial value, examine-only item
+world Manor:
+    flag west_wing_unlocked = true
+    flag vault_cracked = false
+    player:
+        inv crowbar
+    end
+    item crowbar:
+        examine: "A heavy iron crowbar. Useful for prying things open."
+    end
+    item portrait:
+        examine: "A stern portrait. Its eyes seem to follow you."
+    end
+    room foyer:
+        item portrait
+        go west -> west_wing requires flag west_wing_unlocked
+    end
+    room west_wing:
+        on enter:
+            say "A cold draft sweeps through the darkened corridor."
+        end
+        go south -> vault requires flag vault_cracked
+    end
+    room vault:
+        on enter:
+            win "You crack the vault. Inside: the missing will."
+        end
+    end
+    puzzle gate:
+        room west_wing
+        requires inv has crowbar
+        unlock vault_cracked
+    end
+end

@@ -1,0 +1,58 @@
+// shipwreck.pico — lose on enter, multi-flag, two puzzle gates, npc
+// Tests: two flags, two puzzle gates, npc if/else dialogue, say on enter
+world Shipwreck:
+    flag hull_patched = false
+    flag anchor_raised = false
+    player:
+        inv rope
+    end
+    item rope:
+        examine: "A length of knotted rope."
+        use:
+            say "You lash the rope around the capstan."
+        end
+    end
+    item patch_kit:
+        examine: "Tar and canvas for sealing hull breaches."
+        use:
+            say "You press the patch over the crack. It holds."
+        end
+    end
+    room lower_deck:
+        item patch_kit
+        on enter:
+            say "Water sloshes around your ankles."
+        end
+        go north -> upper_deck requires flag hull_patched
+    end
+    room upper_deck:
+        on enter:
+            say "Salt wind tears at your coat."
+        end
+        go north -> helm requires flag anchor_raised
+    end
+    room helm:
+        on enter:
+            win "You steer the battered ship into harbour. You survived."
+        end
+    end
+    npc bosun:
+        talk:
+            if flag hull_patched
+                say "Good work below. Now raise the anchor."
+            else
+                say "Patch the hull first or we sink where we stand."
+            end
+        end
+    end
+    puzzle gate:
+        room lower_deck
+        requires inv has patch_kit
+        unlock hull_patched
+    end
+    puzzle gate:
+        room upper_deck
+        requires inv has rope
+        unlock anchor_raised
+    end
+end
