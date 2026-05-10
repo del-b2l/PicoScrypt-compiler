@@ -66,9 +66,9 @@ class ItemRef:
         return f'ItemRef({self.item_name!r})'
 
 class ExitNode:
-    def __init__(self, direction, target, condition=None):
+    def __init__(self, direction: str, target: str, condition=None):
         self.direction = direction  # 'north' / 'south' etc.
-        self.target    = target     # room name string
+        self.target: str = target   # room name string
         self.condition = condition  # ConditionNode or None
 
     def __repr__(self):
@@ -94,12 +94,13 @@ class PuzzleNode:
         )
 
 class NPCNode:
-    def __init__(self, name, dialogues):
+    def __init__(self, name, dialogues, room_name=None):
         self.name = name              # string
         self.dialogues = dialogues    # list of DialogueNode
+        self.room_name = room_name    # optional room scope string
 
     def __repr__(self):
-        return f'NPCNode({self.name!r}, {self.dialogues})'
+        return f'NPCNode({self.name!r}, room={self.room_name!r}, {self.dialogues})'
 
 class DialogueNode:
     def __init__(self, branches):

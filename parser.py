@@ -187,6 +187,10 @@ class Parser:
         self.consume('NPC')
         name = self.consume('IDENT').value
         self.consume('COLON')
+        room_name = None
+        if self.match('ROOM'):
+            self.consume('ROOM')
+            room_name = self.consume('IDENT').value
         dialogues = []
         while not self.match('END', 'EOF'):
             if self.match('TALK'):
@@ -195,7 +199,7 @@ class Parser:
                 tok = self.current()
                 raise SyntaxError(f'Line {tok.line}: unexpected token {tok.type} in npc block')
         self.consume('END')
-        return NPCNode(name, dialogues)
+        return NPCNode(name, dialogues, room_name)
 
     def parse_dialogue_block(self):
         self.consume('TALK')

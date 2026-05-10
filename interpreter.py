@@ -26,7 +26,8 @@ class GameRuntime:
         self.flags = {}
         self.inventory = set()
         self.room_items = {}
-        self.current_room = None
+        self.room_npcs = {}   # room_name -> set of npc names present
+        self.current_room: str = ""  # set properly by _build_state before any use
         self.game_over = False
         self._triggered_puzzles = set()
         self._build_state()
@@ -55,6 +56,11 @@ class GameRuntime:
                 if isinstance(part, ItemRef):
                     placed.add(part.item_name)
             self.room_items[room_name] = placed
+            self.room_npcs[room_name] = set()
+
+        for npc in self.npcs.values():
+            if npc.room_name and npc.room_name in self.room_npcs:
+                self.room_npcs[npc.room_name].add(npc.name)
 
         if not room_order:
             raise RuntimeError("No rooms declared.")
@@ -113,6 +119,9 @@ class GameRuntime:
             print("\nYou see:", ", ".join(sorted(self.room_items[self.current_room])))
         else:
             print("You see: nothing useful.")
+        npcs_here = self.room_npcs.get(self.current_room, set())
+        if npcs_here:
+            print("You can talk to:", ", ".join(sorted(npcs_here)))
         if exits:
             print("Exits:", ", ".join(sorted(exits)))
 
@@ -188,6 +197,9 @@ class GameRuntime:
         npc = self.npcs.get(npc_name)
         if not npc:
             print("No such NPC.")
+            return
+        if npc.room_name and npc.room_name != self.current_room:
+            print(f"{npc_name} is not here.")
             return
         for dialogue in npc.dialogues:
             if isinstance(dialogue, DialogueNode):
