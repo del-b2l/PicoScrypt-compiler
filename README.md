@@ -2,13 +2,7 @@
 
 Welcome to the GitHub home of `PicoScrypt-compiler`! This repository is a compact compiler project designed for our course **CS4031 - Compiler Construction** @ FAST NUCES Karachi.
 
-```
-  .     .  .      +     .      .          .
-     .       .      .     .       .   .
-  .     .   .   *  .  *  .  *   .      .
-       .   🌲  .    .   .   🌿  .     .
-  .   *  .  *  .  *  .  *  .  *  .  *
-```
+![[docs/hero_img.png]]
 
 ## 🌱 Setup
 
