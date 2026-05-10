@@ -1,0 +1,12 @@
+world Inn:
+    flag paid = false
+    npc innkeeper:
+        talk:
+            if flag paid
+                say "Your room is ready."
+            else
+                say "You need to pay first."
+            end
+        end
+    end
+end

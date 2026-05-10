@@ -1,0 +1,14 @@
+world Shed:
+    player:
+        inv key
+    end
+    item key:
+        use:
+            say "The key turns in the lock."
+        end
+    end
+    puzzle gate:
+        requires inv has key
+        unlock door_open
+    end
+end
