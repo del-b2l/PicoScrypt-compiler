@@ -1,5 +1,5 @@
-// manor.pico — lose condition on enter, flag starts true
-// Tests: on enter lose, flag = true initial value, examine-only item
+// manor.pico - lose condition on enter, flag starts true
+// tests: on enter lose, flag = true initial value, examine-only item
 world Manor:
     flag west_wing_unlocked = true
     flag vault_cracked = false

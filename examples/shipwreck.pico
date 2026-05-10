@@ -1,5 +1,5 @@
-// shipwreck.pico — lose on enter, multi-flag, two puzzle gates, npc
-// Tests: two flags, two puzzle gates, npc if/else dialogue, say on enter
+// shipwreck.pico - lose on enter, multi-flag, two puzzle gates, npc
+// tests: two flags, two puzzle gates, npc if/else dialogue, say on enter
 world Shipwreck:
     flag hull_patched = false
     flag anchor_raised = false
@@ -37,9 +37,10 @@ world Shipwreck:
         end
     end
     npc bosun:
+        room lower_deck
         talk:
             if flag hull_patched
-                say "Good work below. Now raise the anchor."
+                say "Good work below. Now raise the anchor once you exit the lower deck."
             else
                 say "Patch the hull first or we sink where we stand."
             end

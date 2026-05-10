@@ -1,5 +1,5 @@
-// lighthouse.pico — uses NPC dialogue with flag condition
-// Tests: npc block, talk, if/else dialogue branch
+// lighthouse.pico - uses NPC dialogue with flag condition
+// tests: npc block, talk, if/else dialogue branch
 world Lighthouse:
     flag lamp_lit = false
     player:
