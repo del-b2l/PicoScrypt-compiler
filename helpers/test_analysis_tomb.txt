@@ -1,0 +1,243 @@
+!!! tomb.pico
+
+run game:
+
+python3 main.py examples/tomb.pico
+
+# lose condition simulated:
+
+You are in antechamber.
+You see: nothing useful.
+Exits: east
+
+> inv
+Inventory: scarab, torch
+
+> examine torch
+A flickering wooden torch.
+
+> examine scarab
+A golden scarab amulet.
+
+> use torch
+The torch goes out. Something ancient stirs in the darkness.
+                                                                                                                                 
+# win condition simulated:
+
+You are in antechamber.
+You see: nothing useful.
+Exits: east
+
+> use scarab
+The scarab glows and fits into the door.
+You hear a mechanism unlock (sarcophagus_open).
+
+> go east
+You enter burial_chamber.
+You are in burial_chamber.
+You see: nothing useful.
+The pharaoh sleeps peacefully. The treasure is yours!
+
+--tokens:
+
+python3 main.py examples/tomb.pico --tokens
+
+TOKENS
+
+Token(WORLD, 'world', line = 4)
+Token(IDENT, 'Tomb', line = 4)
+Token(COLON, ':', line = 4)
+Token(FLAG, 'flag', line = 5)
+Token(IDENT, 'sarcophagus_open', line = 5)
+Token(EQUALS, '=', line = 5)
+Token(FALSE, 'false', line = 5)
+Token(PLAYER, 'player', line = 7)
+Token(COLON, ':', line = 7)
+Token(INV, 'inv', line = 8)
+Token(IDENT, 'torch', line = 8)
+Token(INV, 'inv', line = 9)
+Token(IDENT, 'scarab', line = 9)
+Token(END, 'end', line = 10)
+Token(ITEM, 'item', line = 12)
+Token(IDENT, 'torch', line = 12)
+Token(COLON, ':', line = 12)
+Token(EXAMINE, 'examine', line = 13)
+Token(COLON, ':', line = 13)
+Token(STRING, 'A flickering wooden torch.', line = 13)
+Token(USE, 'use', line = 15)
+Token(COLON, ':', line = 15)
+Token(LOSE, 'lose', line = 16)
+Token(STRING, 'The torch goes out. Something ancient stirs in the darkness.', line = 16)
+Token(END, 'end', line = 17)
+Token(END, 'end', line = 18)
+Token(ITEM, 'item', line = 20)
+Token(IDENT, 'scarab', line = 20)
+Token(COLON, ':', line = 20)
+Token(EXAMINE, 'examine', line = 21)
+Token(COLON, ':', line = 21)
+Token(STRING, 'A golden scarab amulet.', line = 21)
+Token(USE, 'use', line = 23)
+Token(COLON, ':', line = 23)
+Token(SAY, 'say', line = 24)
+Token(STRING, 'The scarab glows and fits into the door.', line = 24)
+Token(END, 'end', line = 25)
+Token(END, 'end', line = 26)
+Token(ROOM, 'room', line = 28)
+Token(IDENT, 'antechamber', line = 28)
+Token(COLON, ':', line = 28)
+Token(GO, 'go', line = 29)
+Token(EAST, 'east', line = 29)
+Token(ARROW, '->', line = 29)
+Token(IDENT, 'burial_chamber', line = 29)
+Token(REQUIRES, 'requires', line = 29)
+Token(FLAG, 'flag', line = 29)
+Token(IDENT, 'sarcophagus_open', line = 29)
+Token(END, 'end', line = 30)
+Token(ROOM, 'room', line = 32)
+Token(IDENT, 'burial_chamber', line = 32)
+Token(COLON, ':', line = 32)
+Token(ON, 'on', line = 33)
+Token(ENTER, 'enter', line = 33)
+Token(COLON, ':', line = 33)
+Token(WIN, 'win', line = 34)
+Token(STRING, 'The pharaoh sleeps peacefully. The treasure is yours!', line = 34)
+Token(END, 'end', line = 35)
+Token(END, 'end', line = 36)
+Token(PUZZLE, 'puzzle', line = 38)
+Token(GATE, 'gate', line = 38)
+Token(COLON, ':', line = 38)
+Token(ROOM, 'room', line = 39)
+Token(IDENT, 'antechamber', line = 39)
+Token(REQUIRES, 'requires', line = 40)
+Token(INV, 'inv', line = 40)
+Token(HAS, 'has', line = 40)
+Token(IDENT, 'scarab', line = 40)
+Token(UNLOCK, 'unlock', line = 41)
+Token(IDENT, 'sarcophagus_open', line = 41)
+Token(END, 'end', line = 42)
+Token(END, 'end', line = 44)
+Token(EOF, None, line = 44)
+
+--ast:
+
+python3 main.py examples/tomb.pico --ast
+
+AST
+
+WorldNode('Tomb')
+  FlagNode('sarcophagus_open' = False)
+  PlayerNode
+    InvNode('torch')
+    InvNode('scarab')
+  ItemNode('torch')
+    ExamineAction('A flickering wooden torch.')
+    UseAction
+      LoseStmt('The torch goes out. Something ancient stirs in the darkness.')
+  ItemNode('scarab')
+    ExamineAction('A golden scarab amulet.')
+    UseAction
+      SayStmt('The scarab glows and fits into the door.')
+  RoomNode('antechamber')
+    ExitNode(east -> 'burial_chamber')
+      ConditionFlag('sarcophagus_open')
+  RoomNode('burial_chamber')
+    OnEnterBlock
+      WinStmt('The pharaoh sleeps peacefully. The treasure is yours!')
+  PuzzleNode(unlock='sarcophagus_open')
+    ConditionInv(has 'scarab')
+
+--symbols:
+
+python3 main.py examples/tomb.pico --symbols
+
+SYMBOL TABLE
+
+world.flags:
+  - sarcophagus_open: bool
+world.items:
+  - scarab
+  - torch
+world.rooms:
+  - antechamber
+  - burial_chamber
+world.player_inv:
+  - scarab
+  - torch
+room scopes:
+  - antechamber: items=[]
+  - burial_chamber: items=[]
+local condition scopes:
+  puzzles:
+    1. inv has scarab @room antechamber
+  npcs:
+
+--tac:
+
+python3 main.py examples/tomb.pico --tac    
+
+RAW TAC
+
+000: ROOM_BURIAL_CHAMBER_ENTER:
+001: PRINT "The pharaoh sleeps peacefully. The treasure is yours!"
+002: HALT
+003: ROOM_BURIAL_CHAMBER_END:
+004: t1 = inv_has(scarab)
+005: if t1 goto PUZZLE_SARCOPHAGUS_OPEN_UNLOCK_1
+006: goto PUZZLE_SARCOPHAGUS_OPEN_END_1
+007: PUZZLE_SARCOPHAGUS_OPEN_UNLOCK_1:
+008: sarcophagus_open = true
+009: PUZZLE_SARCOPHAGUS_OPEN_END_1:
+
+--optimize:
+
+python3 main.py examples/tomb.pico --optimize
+
+════════════════════════════════════════════════════════════
+  OPTIMIZATION REPORT  —  PicoScrypt TAC Optimizer
+════════════════════════════════════════════════════════════
+
+BEFORE OPTIMIZATION
+────────────────────────────────────────────────────────────
+  000: ROOM_BURIAL_CHAMBER_ENTER:
+  001: PRINT "The pharaoh sleeps peacefully. The treasure is yours!"
+  002: HALT
+  003: ROOM_BURIAL_CHAMBER_END:
+  004: t1 = inv_has(scarab)
+  005: if t1 goto PUZZLE_SARCOPHAGUS_OPEN_UNLOCK_1
+  006: goto PUZZLE_SARCOPHAGUS_OPEN_END_1
+  007: PUZZLE_SARCOPHAGUS_OPEN_UNLOCK_1:
+  008: sarcophagus_open = true
+  009: PUZZLE_SARCOPHAGUS_OPEN_END_1:
+
+AFTER OPTIMIZATION  (annotations show what was removed)
+────────────────────────────────────────────────────────────
+  000: // ELIMINATED (dead label): ROOM_BURIAL_CHAMBER_ENTER:
+  001: PRINT "The pharaoh sleeps peacefully. The treasure is yours!"
+  002: HALT
+  003: // ELIMINATED (dead label): ROOM_BURIAL_CHAMBER_END:
+  004: t1 = true  // folded: inv_has(scarab) is always True
+  005: goto PUZZLE_SARCOPHAGUS_OPEN_UNLOCK_1  // folded: t1 always true
+  006: // ELIMINATED (unreachable): goto PUZZLE_SARCOPHAGUS_OPEN_END_1
+  007: PUZZLE_SARCOPHAGUS_OPEN_UNLOCK_1:
+  008: sarcophagus_open = true
+  009: // ELIMINATED (dead label): PUZZLE_SARCOPHAGUS_OPEN_END_1:
+
+SUMMARY
+────────────────────────────────────────────────────────────
+  Instructions before : 10
+  Instructions after  : 6  (+ 4 annotation comments)
+  Total removed       : 4  (40% reduction)
+
+  Pass 1 — Constant Folding
+    Condition reads folded   : 1
+    Branches eliminated      : 1
+
+  Pass 2 — Dead Code Elimination  (region-aware)
+    Unreachable instrs removed : 1
+    Dead temp assigns removed  : 0
+
+  Pass 3 — Peephole Optimization
+    Redundant gotos removed  : 0
+    Dead labels removed      : 3
+    Duplicate PRINTs removed : 0
+════════════════════════════════════════════════════════════

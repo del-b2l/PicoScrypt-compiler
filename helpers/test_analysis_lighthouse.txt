@@ -1,0 +1,233 @@
+!!! lighthouse.pico
+
+run game:
+
+python3 main.py examples/lighthouse.pico        
+
+You are in shore.
+You see: nothing useful.
+Exits: north
+
+> inv
+Inventory: oil
+
+> examine oil
+A flask of lamp oil.
+
+> use oil
+You pour the oil into the lamp reservoir.
+You hear a mechanism unlock (lamp_lit).
+
+> go north
+You enter tower.
+You are in tower.
+You see: nothing useful.
+The beam sweeps out to sea. The ship is saved!
+
+--tokens:
+
+python3 main.py examples/lighthouse.pico --tokens
+
+TOKENS
+
+Token(WORLD, 'world', line = 3)
+Token(IDENT, 'Lighthouse', line = 3)
+Token(COLON, ':', line = 3)
+Token(FLAG, 'flag', line = 4)
+Token(IDENT, 'lamp_lit', line = 4)
+Token(EQUALS, '=', line = 4)
+Token(FALSE, 'false', line = 4)
+Token(PLAYER, 'player', line = 5)
+Token(COLON, ':', line = 5)
+Token(INV, 'inv', line = 6)
+Token(IDENT, 'oil', line = 6)
+Token(END, 'end', line = 7)
+Token(ITEM, 'item', line = 8)
+Token(IDENT, 'oil', line = 8)
+Token(COLON, ':', line = 8)
+Token(EXAMINE, 'examine', line = 9)
+Token(COLON, ':', line = 9)
+Token(STRING, 'A flask of lamp oil.', line = 9)
+Token(USE, 'use', line = 10)
+Token(COLON, ':', line = 10)
+Token(SAY, 'say', line = 11)
+Token(STRING, 'You pour the oil into the lamp reservoir.', line = 11)
+Token(END, 'end', line = 12)
+Token(END, 'end', line = 13)
+Token(ROOM, 'room', line = 14)
+Token(IDENT, 'shore', line = 14)
+Token(COLON, ':', line = 14)
+Token(GO, 'go', line = 15)
+Token(NORTH, 'north', line = 15)
+Token(ARROW, '->', line = 15)
+Token(IDENT, 'tower', line = 15)
+Token(REQUIRES, 'requires', line = 15)
+Token(FLAG, 'flag', line = 15)
+Token(IDENT, 'lamp_lit', line = 15)
+Token(END, 'end', line = 16)
+Token(ROOM, 'room', line = 17)
+Token(IDENT, 'tower', line = 17)
+Token(COLON, ':', line = 17)
+Token(ON, 'on', line = 18)
+Token(ENTER, 'enter', line = 18)
+Token(COLON, ':', line = 18)
+Token(WIN, 'win', line = 19)
+Token(STRING, 'The beam sweeps out to sea. The ship is saved!', line = 19)
+Token(END, 'end', line = 20)
+Token(END, 'end', line = 21)
+Token(NPC, 'npc', line = 22)
+Token(IDENT, 'keeper', line = 22)
+Token(COLON, ':', line = 22)
+Token(TALK, 'talk', line = 23)
+Token(COLON, ':', line = 23)
+Token(IF, 'if', line = 24)
+Token(FLAG, 'flag', line = 24)
+Token(IDENT, 'lamp_lit', line = 24)
+Token(SAY, 'say', line = 25)
+Token(STRING, 'The lamp burns bright. Well done.', line = 25)
+Token(ELSE, 'else', line = 26)
+Token(SAY, 'say', line = 27)
+Token(STRING, 'The lamp is dark. Find oil to light it.', line = 27)
+Token(END, 'end', line = 28)
+Token(END, 'end', line = 29)
+Token(END, 'end', line = 30)
+Token(PUZZLE, 'puzzle', line = 31)
+Token(GATE, 'gate', line = 31)
+Token(COLON, ':', line = 31)
+Token(ROOM, 'room', line = 32)
+Token(IDENT, 'shore', line = 32)
+Token(REQUIRES, 'requires', line = 33)
+Token(INV, 'inv', line = 33)
+Token(HAS, 'has', line = 33)
+Token(IDENT, 'oil', line = 33)
+Token(UNLOCK, 'unlock', line = 34)
+Token(IDENT, 'lamp_lit', line = 34)
+Token(END, 'end', line = 35)
+Token(END, 'end', line = 36)
+Token(EOF, None, line = 37)
+
+--ast:
+
+python3 main.py examples/lighthouse.pico --ast
+
+AST
+
+WorldNode('Lighthouse')
+  FlagNode('lamp_lit' = False)
+  PlayerNode
+    InvNode('oil')
+  ItemNode('oil')
+    ExamineAction('A flask of lamp oil.')
+    UseAction
+      SayStmt('You pour the oil into the lamp reservoir.')
+  RoomNode('shore')
+    ExitNode(north -> 'tower')
+      ConditionFlag('lamp_lit')
+  RoomNode('tower')
+    OnEnterBlock
+      WinStmt('The beam sweeps out to sea. The ship is saved!')
+  NPCNode('keeper')
+    DialogueNode
+      DialogueBranch(if)
+        ConditionFlag('lamp_lit')
+        then:
+          SayStmt('The lamp burns bright. Well done.')
+        else:
+          SayStmt('The lamp is dark. Find oil to light it.')
+  PuzzleNode(unlock='lamp_lit')
+    ConditionInv(has 'oil')
+
+--symbols:
+
+python3 main.py examples/lighthouse.pico --symbols
+
+SYMBOL TABLE
+
+world.flags:
+  - lamp_lit: bool
+world.items:
+  - oil
+world.rooms:
+  - shore
+  - tower
+world.player_inv:
+  - oil
+room scopes:
+  - shore: items=[]
+  - tower: items=[]
+local condition scopes:
+  puzzles:
+    1. inv has oil @room shore
+  npcs:
+    - keeper: ['flag lamp_lit']
+
+--tac:
+
+python3 main.py examples/lighthouse.pico --tac    
+
+RAW TAC
+
+000: ROOM_TOWER_ENTER:
+001: PRINT "The beam sweeps out to sea. The ship is saved!"
+002: HALT
+003: ROOM_TOWER_END:
+004: t1 = inv_has(oil)
+005: if t1 goto PUZZLE_LAMP_LIT_UNLOCK_1
+006: goto PUZZLE_LAMP_LIT_END_1
+007: PUZZLE_LAMP_LIT_UNLOCK_1:
+008: lamp_lit = true
+009: PUZZLE_LAMP_LIT_END_1:
+
+--optimize:
+
+python3 main.py examples/lighthouse.pico --optimize
+
+════════════════════════════════════════════════════════════
+  OPTIMIZATION REPORT  —  PicoScrypt TAC Optimizer
+════════════════════════════════════════════════════════════
+
+BEFORE OPTIMIZATION
+────────────────────────────────────────────────────────────
+  000: ROOM_TOWER_ENTER:
+  001: PRINT "The beam sweeps out to sea. The ship is saved!"
+  002: HALT
+  003: ROOM_TOWER_END:
+  004: t1 = inv_has(oil)
+  005: if t1 goto PUZZLE_LAMP_LIT_UNLOCK_1
+  006: goto PUZZLE_LAMP_LIT_END_1
+  007: PUZZLE_LAMP_LIT_UNLOCK_1:
+  008: lamp_lit = true
+  009: PUZZLE_LAMP_LIT_END_1:
+
+AFTER OPTIMIZATION  (annotations show what was removed)
+────────────────────────────────────────────────────────────
+  000: // ELIMINATED (dead label): ROOM_TOWER_ENTER:
+  001: PRINT "The beam sweeps out to sea. The ship is saved!"
+  002: HALT
+  003: // ELIMINATED (dead label): ROOM_TOWER_END:
+  004: t1 = true  // folded: inv_has(oil) is always True
+  005: goto PUZZLE_LAMP_LIT_UNLOCK_1  // folded: t1 always true
+  006: // ELIMINATED (unreachable): goto PUZZLE_LAMP_LIT_END_1
+  007: PUZZLE_LAMP_LIT_UNLOCK_1:
+  008: lamp_lit = true
+  009: // ELIMINATED (dead label): PUZZLE_LAMP_LIT_END_1:
+
+SUMMARY
+────────────────────────────────────────────────────────────
+  Instructions before : 10
+  Instructions after  : 6  (+ 4 annotation comments)
+  Total removed       : 4  (40% reduction)
+
+  Pass 1 — Constant Folding
+    Condition reads folded   : 1
+    Branches eliminated      : 1
+
+  Pass 2 — Dead Code Elimination  (region-aware)
+    Unreachable instrs removed : 1
+    Dead temp assigns removed  : 0
+
+  Pass 3 — Peephole Optimization
+    Redundant gotos removed  : 0
+    Dead labels removed      : 3
+    Duplicate PRINTs removed : 0
+════════════════════════════════════════════════════════════

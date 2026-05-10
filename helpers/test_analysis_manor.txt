@@ -1,0 +1,269 @@
+!!! manor.pico
+
+run game:
+
+python3 main.py examples/manor.pico
+
+You are in foyer.
+
+You see: portrait
+Exits: west
+
+> examine portrait
+A stern portrait. Its eyes seem to follow you.
+
+> inv 
+Inventory: crowbar
+
+> examine crowbar   
+A heavy iron crowbar. Useful for prying things open.
+
+> use crowbar
+Nothing happens.
+
+> go west
+You enter west_wing.
+You are in west_wing.
+You see: nothing useful.
+Exits: south
+A cold draft sweeps through the darkened corridor.
+
+> use crowbar
+You hear a mechanism unlock (vault_cracked).
+
+> go south
+You enter vault.
+You are in vault.
+You see: nothing useful.
+You crack the vault. Inside: the missing will.
+
+--tokens:
+
+python3 main.py examples/manor.pico --tokens
+
+TOKENS
+
+Token(WORLD, 'world', line = 3)
+Token(IDENT, 'Manor', line = 3)
+Token(COLON, ':', line = 3)
+Token(FLAG, 'flag', line = 4)
+Token(IDENT, 'west_wing_unlocked', line = 4)
+Token(EQUALS, '=', line = 4)
+Token(TRUE, 'true', line = 4)
+Token(FLAG, 'flag', line = 5)
+Token(IDENT, 'vault_cracked', line = 5)
+Token(EQUALS, '=', line = 5)
+Token(FALSE, 'false', line = 5)
+Token(PLAYER, 'player', line = 6)
+Token(COLON, ':', line = 6)
+Token(INV, 'inv', line = 7)
+Token(IDENT, 'crowbar', line = 7)
+Token(END, 'end', line = 8)
+Token(ITEM, 'item', line = 9)
+Token(IDENT, 'crowbar', line = 9)
+Token(COLON, ':', line = 9)
+Token(EXAMINE, 'examine', line = 10)
+Token(COLON, ':', line = 10)
+Token(STRING, 'A heavy iron crowbar. Useful for prying things open.', line = 10)
+Token(END, 'end', line = 11)
+Token(ITEM, 'item', line = 12)
+Token(IDENT, 'portrait', line = 12)
+Token(COLON, ':', line = 12)
+Token(EXAMINE, 'examine', line = 13)
+Token(COLON, ':', line = 13)
+Token(STRING, 'A stern portrait. Its eyes seem to follow you.', line = 13)
+Token(END, 'end', line = 14)
+Token(ROOM, 'room', line = 15)
+Token(IDENT, 'foyer', line = 15)
+Token(COLON, ':', line = 15)
+Token(ITEM, 'item', line = 16)
+Token(IDENT, 'portrait', line = 16)
+Token(GO, 'go', line = 17)
+Token(WEST, 'west', line = 17)
+Token(ARROW, '->', line = 17)
+Token(IDENT, 'west_wing', line = 17)
+Token(REQUIRES, 'requires', line = 17)
+Token(FLAG, 'flag', line = 17)
+Token(IDENT, 'west_wing_unlocked', line = 17)
+Token(END, 'end', line = 18)
+Token(ROOM, 'room', line = 19)
+Token(IDENT, 'west_wing', line = 19)
+Token(COLON, ':', line = 19)
+Token(ON, 'on', line = 20)
+Token(ENTER, 'enter', line = 20)
+Token(COLON, ':', line = 20)
+Token(SAY, 'say', line = 21)
+Token(STRING, 'A cold draft sweeps through the darkened corridor.', line = 21)
+Token(END, 'end', line = 22)
+Token(GO, 'go', line = 23)
+Token(SOUTH, 'south', line = 23)
+Token(ARROW, '->', line = 23)
+Token(IDENT, 'vault', line = 23)
+Token(REQUIRES, 'requires', line = 23)
+Token(FLAG, 'flag', line = 23)
+Token(IDENT, 'vault_cracked', line = 23)
+Token(END, 'end', line = 24)
+Token(ROOM, 'room', line = 25)
+Token(IDENT, 'vault', line = 25)
+Token(COLON, ':', line = 25)
+Token(ON, 'on', line = 26)
+Token(ENTER, 'enter', line = 26)
+Token(COLON, ':', line = 26)
+Token(WIN, 'win', line = 27)
+Token(STRING, 'You crack the vault. Inside: the missing will.', line = 27)
+Token(END, 'end', line = 28)
+Token(END, 'end', line = 29)
+Token(PUZZLE, 'puzzle', line = 30)
+Token(GATE, 'gate', line = 30)
+Token(COLON, ':', line = 30)
+Token(ROOM, 'room', line = 31)
+Token(IDENT, 'west_wing', line = 31)
+Token(REQUIRES, 'requires', line = 32)
+Token(INV, 'inv', line = 32)
+Token(HAS, 'has', line = 32)
+Token(IDENT, 'crowbar', line = 32)
+Token(UNLOCK, 'unlock', line = 33)
+Token(IDENT, 'vault_cracked', line = 33)
+Token(END, 'end', line = 34)
+Token(END, 'end', line = 35)
+Token(EOF, None, line = 36)
+
+--ast:
+
+python3 main.py examples/manor.pico --ast
+
+AST
+
+WorldNode('Manor')
+  FlagNode('west_wing_unlocked' = True)
+  FlagNode('vault_cracked' = False)
+  PlayerNode
+    InvNode('crowbar')
+  ItemNode('crowbar')
+    ExamineAction('A heavy iron crowbar. Useful for prying things open.')
+  ItemNode('portrait')
+    ExamineAction('A stern portrait. Its eyes seem to follow you.')
+  RoomNode('foyer')
+    ItemRef('portrait')
+    ExitNode(west -> 'west_wing')
+      ConditionFlag('west_wing_unlocked')
+  RoomNode('west_wing')
+    OnEnterBlock
+      SayStmt('A cold draft sweeps through the darkened corridor.')
+    ExitNode(south -> 'vault')
+      ConditionFlag('vault_cracked')
+  RoomNode('vault')
+    OnEnterBlock
+      WinStmt('You crack the vault. Inside: the missing will.')
+  PuzzleNode(unlock='vault_cracked')
+    ConditionInv(has 'crowbar')
+
+--symbols:
+
+python3 main.py examples/manor.pico --symbols
+
+SYMBOL TABLE
+
+world.flags:
+  - vault_cracked: bool
+  - west_wing_unlocked: bool
+world.items:
+  - crowbar
+  - portrait
+world.rooms:
+  - foyer
+  - vault
+  - west_wing
+world.player_inv:
+  - crowbar
+room scopes:
+  - foyer: items=['portrait']
+  - vault: items=[]
+  - west_wing: items=[]
+local condition scopes:
+  puzzles:
+    1. inv has crowbar @room west_wing
+  npcs:
+
+--tac:
+
+python3 main.py examples/manor.pico --tac    
+
+RAW TAC
+
+000: ROOM_WEST_WING_ENTER:
+001: PRINT "A cold draft sweeps through the darkened corridor."
+002: goto ROOM_WEST_WING_END
+003: ROOM_WEST_WING_END:
+004: ROOM_VAULT_ENTER:
+005: PRINT "You crack the vault. Inside: the missing will."
+006: HALT
+007: ROOM_VAULT_END:
+008: t1 = inv_has(crowbar)
+009: if t1 goto PUZZLE_VAULT_CRACKED_UNLOCK_1
+010: goto PUZZLE_VAULT_CRACKED_END_1
+011: PUZZLE_VAULT_CRACKED_UNLOCK_1:
+012: vault_cracked = true
+013: PUZZLE_VAULT_CRACKED_END_1:
+
+--optimize:
+
+python3 main.py examples/manor.pico --optimize
+
+════════════════════════════════════════════════════════════
+  OPTIMIZATION REPORT  —  PicoScrypt TAC Optimizer
+════════════════════════════════════════════════════════════
+
+BEFORE OPTIMIZATION
+────────────────────────────────────────────────────────────
+  000: ROOM_WEST_WING_ENTER:
+  001: PRINT "A cold draft sweeps through the darkened corridor."
+  002: goto ROOM_WEST_WING_END
+  003: ROOM_WEST_WING_END:
+  004: ROOM_VAULT_ENTER:
+  005: PRINT "You crack the vault. Inside: the missing will."
+  006: HALT
+  007: ROOM_VAULT_END:
+  008: t1 = inv_has(crowbar)
+  009: if t1 goto PUZZLE_VAULT_CRACKED_UNLOCK_1
+  010: goto PUZZLE_VAULT_CRACKED_END_1
+  011: PUZZLE_VAULT_CRACKED_UNLOCK_1:
+  012: vault_cracked = true
+  013: PUZZLE_VAULT_CRACKED_END_1:
+
+AFTER OPTIMIZATION  (annotations show what was removed)
+────────────────────────────────────────────────────────────
+  000: // ELIMINATED (dead label): ROOM_WEST_WING_ENTER:
+  001: PRINT "A cold draft sweeps through the darkened corridor."
+  002: // ELIMINATED (redundant goto): goto ROOM_WEST_WING_END
+  003: ROOM_WEST_WING_END:
+  004: // ELIMINATED (dead label): ROOM_VAULT_ENTER:
+  005: PRINT "You crack the vault. Inside: the missing will."
+  006: HALT
+  007: // ELIMINATED (dead label): ROOM_VAULT_END:
+  008: t1 = true  // folded: inv_has(crowbar) is always True
+  009: goto PUZZLE_VAULT_CRACKED_UNLOCK_1  // folded: t1 always true
+  010: // ELIMINATED (unreachable): goto PUZZLE_VAULT_CRACKED_END_1
+  011: PUZZLE_VAULT_CRACKED_UNLOCK_1:
+  012: vault_cracked = true
+  013: // ELIMINATED (dead label): PUZZLE_VAULT_CRACKED_END_1:
+
+SUMMARY
+────────────────────────────────────────────────────────────
+  Instructions before : 14
+  Instructions after  : 8  (+ 6 annotation comments)
+  Total removed       : 6  (43% reduction)
+
+  Pass 1 — Constant Folding
+    Condition reads folded   : 1
+    Branches eliminated      : 1
+
+  Pass 2 — Dead Code Elimination  (region-aware)
+    Unreachable instrs removed : 1
+    Dead temp assigns removed  : 0
+
+  Pass 3 — Peephole Optimization
+    Redundant gotos removed  : 1
+    Dead labels removed      : 4
+    Duplicate PRINTs removed : 0
+════════════════════════════════════════════════════════════

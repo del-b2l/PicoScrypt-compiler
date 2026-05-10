@@ -1,0 +1,210 @@
+!!! crypt.pico
+
+run game:
+
+python3 main.py examples/crypt.pico        
+You are in entrance.
+
+You see: gem
+Exits: north
+
+> use key
+You hear a mechanism unlock (door_open).
+
+> go north
+You enter chamber.
+You are in chamber.
+You see: nothing useful.
+You escaped!
+
+--tokens:
+
+python3 main.py examples/crypt.pico --tokens
+
+TOKENS
+
+Token(WORLD, 'world', line = 1)
+Token(IDENT, 'Crypt', line = 1)
+Token(COLON, ':', line = 1)
+Token(FLAG, 'flag', line = 2)
+Token(IDENT, 'door_open', line = 2)
+Token(EQUALS, '=', line = 2)
+Token(FALSE, 'false', line = 2)
+Token(PLAYER, 'player', line = 3)
+Token(COLON, ':', line = 3)
+Token(INV, 'inv', line = 4)
+Token(IDENT, 'key', line = 4)
+Token(END, 'end', line = 5)
+Token(ITEM, 'item', line = 6)
+Token(IDENT, 'key', line = 6)
+Token(COLON, ':', line = 6)
+Token(EXAMINE, 'examine', line = 7)
+Token(COLON, ':', line = 7)
+Token(STRING, 'An old iron key.', line = 7)
+Token(END, 'end', line = 8)
+Token(ROOM, 'room', line = 9)
+Token(IDENT, 'entrance', line = 9)
+Token(COLON, ':', line = 9)
+Token(ITEM, 'item', line = 10)
+Token(IDENT, 'gem', line = 10)
+Token(GO, 'go', line = 11)
+Token(NORTH, 'north', line = 11)
+Token(ARROW, '->', line = 11)
+Token(IDENT, 'chamber', line = 11)
+Token(REQUIRES, 'requires', line = 11)
+Token(FLAG, 'flag', line = 11)
+Token(IDENT, 'door_open', line = 11)
+Token(END, 'end', line = 12)
+Token(ITEM, 'item', line = 13)
+Token(IDENT, 'gem', line = 13)
+Token(COLON, ':', line = 13)
+Token(USE, 'use', line = 14)
+Token(COLON, ':', line = 14)
+Token(SAY, 'say', line = 15)
+Token(STRING, 'The gem clicks into place.', line = 15)
+Token(END, 'end', line = 16)
+Token(END, 'end', line = 17)
+Token(ROOM, 'room', line = 18)
+Token(IDENT, 'chamber', line = 18)
+Token(COLON, ':', line = 18)
+Token(ON, 'on', line = 19)
+Token(ENTER, 'enter', line = 19)
+Token(COLON, ':', line = 19)
+Token(WIN, 'win', line = 20)
+Token(STRING, 'You escaped!', line = 20)
+Token(END, 'end', line = 21)
+Token(END, 'end', line = 22)
+Token(PUZZLE, 'puzzle', line = 23)
+Token(GATE, 'gate', line = 23)
+Token(COLON, ':', line = 23)
+Token(ROOM, 'room', line = 24)
+Token(IDENT, 'entrance', line = 24)
+Token(REQUIRES, 'requires', line = 25)
+Token(INV, 'inv', line = 25)
+Token(HAS, 'has', line = 25)
+Token(IDENT, 'key', line = 25)
+Token(UNLOCK, 'unlock', line = 26)
+Token(IDENT, 'door_open', line = 26)
+Token(END, 'end', line = 27)
+Token(END, 'end', line = 28)
+Token(EOF, None, line = 32)
+
+--ast:
+
+python3 main.py examples/crypt.pico --ast
+
+AST
+
+WorldNode('Crypt')
+  FlagNode('door_open' = False)
+  PlayerNode
+    InvNode('key')
+  ItemNode('key')
+    ExamineAction('An old iron key.')
+  RoomNode('entrance')
+    ItemRef('gem')
+    ExitNode(north -> 'chamber')
+      ConditionFlag('door_open')
+  ItemNode('gem')
+    UseAction
+      SayStmt('The gem clicks into place.')
+  RoomNode('chamber')
+    OnEnterBlock
+      WinStmt('You escaped!')
+  PuzzleNode(unlock='door_open')
+    ConditionInv(has 'key')
+
+--symbols:
+
+python3 main.py examples/crypt.pico --symbols
+
+SYMBOL TABLE
+
+world.flags:
+  - door_open: bool
+world.items:
+  - gem
+  - key
+world.rooms:
+  - chamber
+  - entrance
+world.player_inv:
+  - key
+room scopes:
+  - chamber: items=[]
+  - entrance: items=['gem']
+local condition scopes:
+  puzzles:
+    1. inv has key @room entrance
+  npcs:
+
+--tac:
+
+python3 main.py examples/crypt.pico --tac    
+
+RAW TAC
+
+000: ROOM_CHAMBER_ENTER:
+001: PRINT "You escaped!"
+002: HALT
+003: ROOM_CHAMBER_END:
+004: t1 = inv_has(key)
+005: if t1 goto PUZZLE_DOOR_OPEN_UNLOCK_1
+006: goto PUZZLE_DOOR_OPEN_END_1
+007: PUZZLE_DOOR_OPEN_UNLOCK_1:
+008: door_open = true
+009: PUZZLE_DOOR_OPEN_END_1:
+
+--optimize:
+
+python3 main.py examples/crypt.pico --optimize
+
+════════════════════════════════════════════════════════════
+  OPTIMIZATION REPORT  —  PicoScrypt TAC Optimizer
+════════════════════════════════════════════════════════════
+
+BEFORE OPTIMIZATION
+────────────────────────────────────────────────────────────
+  000: ROOM_CHAMBER_ENTER:
+  001: PRINT "You escaped!"
+  002: HALT
+  003: ROOM_CHAMBER_END:
+  004: t1 = inv_has(key)
+  005: if t1 goto PUZZLE_DOOR_OPEN_UNLOCK_1
+  006: goto PUZZLE_DOOR_OPEN_END_1
+  007: PUZZLE_DOOR_OPEN_UNLOCK_1:
+  008: door_open = true
+  009: PUZZLE_DOOR_OPEN_END_1:
+
+AFTER OPTIMIZATION  (annotations show what was removed)
+────────────────────────────────────────────────────────────
+  000: // ELIMINATED (dead label): ROOM_CHAMBER_ENTER:
+  001: PRINT "You escaped!"
+  002: HALT
+  003: // ELIMINATED (dead label): ROOM_CHAMBER_END:
+  004: t1 = true  // folded: inv_has(key) is always True
+  005: goto PUZZLE_DOOR_OPEN_UNLOCK_1  // folded: t1 always true
+  006: // ELIMINATED (unreachable): goto PUZZLE_DOOR_OPEN_END_1
+  007: PUZZLE_DOOR_OPEN_UNLOCK_1:
+  008: door_open = true
+  009: // ELIMINATED (dead label): PUZZLE_DOOR_OPEN_END_1:
+
+SUMMARY
+────────────────────────────────────────────────────────────
+  Instructions before : 10
+  Instructions after  : 6  (+ 4 annotation comments)
+  Total removed       : 4  (40% reduction)
+
+  Pass 1 — Constant Folding
+    Condition reads folded   : 1
+    Branches eliminated      : 1
+
+  Pass 2 — Dead Code Elimination  (region-aware)
+    Unreachable instrs removed : 1
+    Dead temp assigns removed  : 0
+
+  Pass 3 — Peephole Optimization
+    Redundant gotos removed  : 0
+    Dead labels removed      : 3
+    Duplicate PRINTs removed : 0
+════════════════════════════════════════════════════════════

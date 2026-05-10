@@ -1,0 +1,370 @@
+!!! shipwreck.pico
+
+run game:
+
+python3 main.py examples/shipwreck.pico
+
+You are in lower_deck.
+
+You see: patch_kit
+You can talk to: bosun
+Exits: north
+Water sloshes around your ankles.
+
+> talk bosun
+Patch the hull first or we sink where we stand.
+
+> take patch_kit
+You take patch_kit.
+
+> use patch_kit
+You press the patch over the crack. It holds.
+You hear a mechanism unlock (hull_patched).
+
+> talk bosun
+Good work below. Now raise the anchor once you exit the lower deck.
+
+> go north
+You enter upper_deck.
+You are in upper_deck.
+You see: nothing useful.
+Exits: north
+Salt wind tears at your coat.
+
+> inv
+Inventory: patch_kit, rope
+
+> use rope
+You lash the rope around the capstan.
+You hear a mechanism unlock (anchor_raised).
+
+> go north
+You enter helm.
+You are in helm.
+You see: nothing useful.
+You steer the battered ship into harbour. You survived.
+
+--tokens:
+
+python3 main.py examples/shipwreck.pico --tokens
+
+TOKENS
+
+Token(WORLD, 'world', line = 3)
+Token(IDENT, 'Shipwreck', line = 3)
+Token(COLON, ':', line = 3)
+Token(FLAG, 'flag', line = 4)
+Token(IDENT, 'hull_patched', line = 4)
+Token(EQUALS, '=', line = 4)
+Token(FALSE, 'false', line = 4)
+Token(FLAG, 'flag', line = 5)
+Token(IDENT, 'anchor_raised', line = 5)
+Token(EQUALS, '=', line = 5)
+Token(FALSE, 'false', line = 5)
+Token(PLAYER, 'player', line = 6)
+Token(COLON, ':', line = 6)
+Token(INV, 'inv', line = 7)
+Token(IDENT, 'rope', line = 7)
+Token(END, 'end', line = 8)
+Token(ITEM, 'item', line = 9)
+Token(IDENT, 'rope', line = 9)
+Token(COLON, ':', line = 9)
+Token(EXAMINE, 'examine', line = 10)
+Token(COLON, ':', line = 10)
+Token(STRING, 'A length of knotted rope.', line = 10)
+Token(USE, 'use', line = 11)
+Token(COLON, ':', line = 11)
+Token(SAY, 'say', line = 12)
+Token(STRING, 'You lash the rope around the capstan.', line = 12)
+Token(END, 'end', line = 13)
+Token(END, 'end', line = 14)
+Token(ITEM, 'item', line = 15)
+Token(IDENT, 'patch_kit', line = 15)
+Token(COLON, ':', line = 15)
+Token(EXAMINE, 'examine', line = 16)
+Token(COLON, ':', line = 16)
+Token(STRING, 'Tar and canvas for sealing hull breaches.', line = 16)
+Token(USE, 'use', line = 17)
+Token(COLON, ':', line = 17)
+Token(SAY, 'say', line = 18)
+Token(STRING, 'You press the patch over the crack. It holds.', line = 18)
+Token(END, 'end', line = 19)
+Token(END, 'end', line = 20)
+Token(ROOM, 'room', line = 21)
+Token(IDENT, 'lower_deck', line = 21)
+Token(COLON, ':', line = 21)
+Token(ITEM, 'item', line = 22)
+Token(IDENT, 'patch_kit', line = 22)
+Token(ON, 'on', line = 23)
+Token(ENTER, 'enter', line = 23)
+Token(COLON, ':', line = 23)
+Token(SAY, 'say', line = 24)
+Token(STRING, 'Water sloshes around your ankles.', line = 24)
+Token(END, 'end', line = 25)
+Token(GO, 'go', line = 26)
+Token(NORTH, 'north', line = 26)
+Token(ARROW, '->', line = 26)
+Token(IDENT, 'upper_deck', line = 26)
+Token(REQUIRES, 'requires', line = 26)
+Token(FLAG, 'flag', line = 26)
+Token(IDENT, 'hull_patched', line = 26)
+Token(END, 'end', line = 27)
+Token(ROOM, 'room', line = 28)
+Token(IDENT, 'upper_deck', line = 28)
+Token(COLON, ':', line = 28)
+Token(ON, 'on', line = 29)
+Token(ENTER, 'enter', line = 29)
+Token(COLON, ':', line = 29)
+Token(SAY, 'say', line = 30)
+Token(STRING, 'Salt wind tears at your coat.', line = 30)
+Token(END, 'end', line = 31)
+Token(GO, 'go', line = 32)
+Token(NORTH, 'north', line = 32)
+Token(ARROW, '->', line = 32)
+Token(IDENT, 'helm', line = 32)
+Token(REQUIRES, 'requires', line = 32)
+Token(FLAG, 'flag', line = 32)
+Token(IDENT, 'anchor_raised', line = 32)
+Token(END, 'end', line = 33)
+Token(ROOM, 'room', line = 34)
+Token(IDENT, 'helm', line = 34)
+Token(COLON, ':', line = 34)
+Token(ON, 'on', line = 35)
+Token(ENTER, 'enter', line = 35)
+Token(COLON, ':', line = 35)
+Token(WIN, 'win', line = 36)
+Token(STRING, 'You steer the battered ship into harbour. You survived.', line = 36)
+Token(END, 'end', line = 37)
+Token(END, 'end', line = 38)
+Token(NPC, 'npc', line = 39)
+Token(IDENT, 'bosun', line = 39)
+Token(COLON, ':', line = 39)
+Token(ROOM, 'room', line = 40)
+Token(IDENT, 'lower_deck', line = 40)
+Token(TALK, 'talk', line = 41)
+Token(COLON, ':', line = 41)
+Token(IF, 'if', line = 42)
+Token(FLAG, 'flag', line = 42)
+Token(IDENT, 'hull_patched', line = 42)
+Token(SAY, 'say', line = 43)
+Token(STRING, 'Good work below. Now raise the anchor once you exit the lower deck.', line = 43)
+Token(ELSE, 'else', line = 44)
+Token(SAY, 'say', line = 45)
+Token(STRING, 'Patch the hull first or we sink where we stand.', line = 45)
+Token(END, 'end', line = 46)
+Token(END, 'end', line = 47)
+Token(END, 'end', line = 48)
+Token(PUZZLE, 'puzzle', line = 49)
+Token(GATE, 'gate', line = 49)
+Token(COLON, ':', line = 49)
+Token(ROOM, 'room', line = 50)
+Token(IDENT, 'lower_deck', line = 50)
+Token(REQUIRES, 'requires', line = 51)
+Token(INV, 'inv', line = 51)
+Token(HAS, 'has', line = 51)
+Token(IDENT, 'patch_kit', line = 51)
+Token(UNLOCK, 'unlock', line = 52)
+Token(IDENT, 'hull_patched', line = 52)
+Token(END, 'end', line = 53)
+Token(PUZZLE, 'puzzle', line = 54)
+Token(GATE, 'gate', line = 54)
+Token(COLON, ':', line = 54)
+Token(ROOM, 'room', line = 55)
+Token(IDENT, 'upper_deck', line = 55)
+Token(REQUIRES, 'requires', line = 56)
+Token(INV, 'inv', line = 56)
+Token(HAS, 'has', line = 56)
+Token(IDENT, 'rope', line = 56)
+Token(UNLOCK, 'unlock', line = 57)
+Token(IDENT, 'anchor_raised', line = 57)
+Token(END, 'end', line = 58)
+Token(END, 'end', line = 59)
+Token(EOF, None, line = 60)
+
+--ast:
+
+python3 main.py examples/shipwreck.pico --ast
+
+AST
+
+WorldNode('Shipwreck')
+  FlagNode('hull_patched' = False)
+  FlagNode('anchor_raised' = False)
+  PlayerNode
+    InvNode('rope')
+  ItemNode('rope')
+    ExamineAction('A length of knotted rope.')
+    UseAction
+      SayStmt('You lash the rope around the capstan.')
+  ItemNode('patch_kit')
+    ExamineAction('Tar and canvas for sealing hull breaches.')
+    UseAction
+      SayStmt('You press the patch over the crack. It holds.')
+  RoomNode('lower_deck')
+    ItemRef('patch_kit')
+    OnEnterBlock
+      SayStmt('Water sloshes around your ankles.')
+    ExitNode(north -> 'upper_deck')
+      ConditionFlag('hull_patched')
+  RoomNode('upper_deck')
+    OnEnterBlock
+      SayStmt('Salt wind tears at your coat.')
+    ExitNode(north -> 'helm')
+      ConditionFlag('anchor_raised')
+  RoomNode('helm')
+    OnEnterBlock
+      WinStmt('You steer the battered ship into harbour. You survived.')
+  NPCNode('bosun')
+    DialogueNode
+      DialogueBranch(if)
+        ConditionFlag('hull_patched')
+        then:
+          SayStmt('Good work below. Now raise the anchor once you exit the lower deck.')
+        else:
+          SayStmt('Patch the hull first or we sink where we stand.')
+  PuzzleNode(unlock='hull_patched')
+    ConditionInv(has 'patch_kit')
+  PuzzleNode(unlock='anchor_raised')
+    ConditionInv(has 'rope')
+
+--symbols:
+
+python3 main.py examples/shipwreck.pico --symbols
+
+SYMBOL TABLE
+
+world.flags:
+  - anchor_raised: bool
+  - hull_patched: bool
+world.items:
+  - patch_kit
+  - rope
+world.rooms:
+  - helm
+  - lower_deck
+  - upper_deck
+world.player_inv:
+  - rope
+room scopes:
+  - helm: items=[]
+  - lower_deck: items=['patch_kit']
+  - upper_deck: items=[]
+local condition scopes:
+  puzzles:
+    1. inv has patch_kit @room lower_deck
+    2. inv has rope @room upper_deck
+  npcs:
+    - bosun: ['flag hull_patched']
+
+--tac:
+
+python3 main.py examples/shipwreck.pico --tac    
+
+RAW TAC
+
+000: ROOM_LOWER_DECK_ENTER:
+001: PRINT "Water sloshes around your ankles."
+002: goto ROOM_LOWER_DECK_END
+003: ROOM_LOWER_DECK_END:
+004: ROOM_UPPER_DECK_ENTER:
+005: PRINT "Salt wind tears at your coat."
+006: goto ROOM_UPPER_DECK_END
+007: ROOM_UPPER_DECK_END:
+008: ROOM_HELM_ENTER:
+009: PRINT "You steer the battered ship into harbour. You survived."
+010: HALT
+011: ROOM_HELM_END:
+012: t1 = inv_has(patch_kit)
+013: if t1 goto PUZZLE_HULL_PATCHED_UNLOCK_1
+014: goto PUZZLE_HULL_PATCHED_END_1
+015: PUZZLE_HULL_PATCHED_UNLOCK_1:
+016: hull_patched = true
+017: PUZZLE_HULL_PATCHED_END_1:
+018: t2 = inv_has(rope)
+019: if t2 goto PUZZLE_ANCHOR_RAISED_UNLOCK_2
+020: goto PUZZLE_ANCHOR_RAISED_END_2
+021: PUZZLE_ANCHOR_RAISED_UNLOCK_2:
+022: anchor_raised = true
+023: PUZZLE_ANCHOR_RAISED_END_2:
+
+--optimize:
+
+python3 main.py examples/shipwreck.pico --optimize
+
+════════════════════════════════════════════════════════════
+  OPTIMIZATION REPORT  —  PicoScrypt TAC Optimizer
+════════════════════════════════════════════════════════════
+
+BEFORE OPTIMIZATION
+────────────────────────────────────────────────────────────
+  000: ROOM_LOWER_DECK_ENTER:
+  001: PRINT "Water sloshes around your ankles."
+  002: goto ROOM_LOWER_DECK_END
+  003: ROOM_LOWER_DECK_END:
+  004: ROOM_UPPER_DECK_ENTER:
+  005: PRINT "Salt wind tears at your coat."
+  006: goto ROOM_UPPER_DECK_END
+  007: ROOM_UPPER_DECK_END:
+  008: ROOM_HELM_ENTER:
+  009: PRINT "You steer the battered ship into harbour. You survived."
+  010: HALT
+  011: ROOM_HELM_END:
+  012: t1 = inv_has(patch_kit)
+  013: if t1 goto PUZZLE_HULL_PATCHED_UNLOCK_1
+  014: goto PUZZLE_HULL_PATCHED_END_1
+  015: PUZZLE_HULL_PATCHED_UNLOCK_1:
+  016: hull_patched = true
+  017: PUZZLE_HULL_PATCHED_END_1:
+  018: t2 = inv_has(rope)
+  019: if t2 goto PUZZLE_ANCHOR_RAISED_UNLOCK_2
+  020: goto PUZZLE_ANCHOR_RAISED_END_2
+  021: PUZZLE_ANCHOR_RAISED_UNLOCK_2:
+  022: anchor_raised = true
+  023: PUZZLE_ANCHOR_RAISED_END_2:
+
+AFTER OPTIMIZATION  (annotations show what was removed)
+────────────────────────────────────────────────────────────
+  000: // ELIMINATED (dead label): ROOM_LOWER_DECK_ENTER:
+  001: PRINT "Water sloshes around your ankles."
+  002: // ELIMINATED (redundant goto): goto ROOM_LOWER_DECK_END
+  003: ROOM_LOWER_DECK_END:
+  004: // ELIMINATED (dead label): ROOM_UPPER_DECK_ENTER:
+  005: PRINT "Salt wind tears at your coat."
+  006: // ELIMINATED (redundant goto): goto ROOM_UPPER_DECK_END
+  007: ROOM_UPPER_DECK_END:
+  008: // ELIMINATED (dead label): ROOM_HELM_ENTER:
+  009: PRINT "You steer the battered ship into harbour. You survived."
+  010: HALT
+  011: // ELIMINATED (dead label): ROOM_HELM_END:
+  012: // ELIMINATED (dead temp assign): t1 = false  // folded: inv_has(patch_kit) is always False
+  013: // ELIMINATED (branch never taken): if t1 goto PUZZLE_HULL_PATCHED_UNLOCK_1  [condition always false]
+  014: goto PUZZLE_HULL_PATCHED_END_1
+  015: // ELIMINATED (dead label): PUZZLE_HULL_PATCHED_UNLOCK_1:
+  016: hull_patched = true
+  017: PUZZLE_HULL_PATCHED_END_1:
+  018: t2 = true  // folded: inv_has(rope) is always True
+  019: goto PUZZLE_ANCHOR_RAISED_UNLOCK_2  // folded: t2 always true
+  020: // ELIMINATED (unreachable): goto PUZZLE_ANCHOR_RAISED_END_2
+  021: PUZZLE_ANCHOR_RAISED_UNLOCK_2:
+  022: anchor_raised = true
+  023: // ELIMINATED (dead label): PUZZLE_ANCHOR_RAISED_END_2:
+
+SUMMARY
+────────────────────────────────────────────────────────────
+  Instructions before : 24
+  Instructions after  : 13  (+ 11 annotation comments)
+  Total removed       : 11  (46% reduction)
+
+  Pass 1 — Constant Folding
+    Condition reads folded   : 2
+    Branches eliminated      : 2
+
+  Pass 2 — Dead Code Elimination  (region-aware)
+    Unreachable instrs removed : 1
+    Dead temp assigns removed  : 1
+
+  Pass 3 — Peephole Optimization
+    Redundant gotos removed  : 2
+    Dead labels removed      : 6
+    Duplicate PRINTs removed : 0
+════════════════════════════════════════════════════════════
