@@ -1,7 +1,7 @@
 program         ::= world_block
 
 world_block     ::= "world" IDENT ":" world_body "end"
-world_body      ::= { flag_decl | player_block | item_block | room_block | puzzle_block }
+world_body      ::= { flag_decl | player_block | item_block | room_block | puzzle_block | npc_block }
 
 flag_decl       ::= "flag" IDENT "=" bool_literal
 bool_literal    ::= "true" | "false"
