@@ -1,4 +1,4 @@
-# grammar rule --> method (creating/ returning objects!)
+# grammar rule --> method (creating / returning objects!)
 
 from ast_nodes import *
 
