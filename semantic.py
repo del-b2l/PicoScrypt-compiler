@@ -23,13 +23,13 @@ class SemanticAnalyzer:
     def __init__(self):
         self.symbols = {
             "world": {
-                "flags": {},                # flag_name -> "bool"
-                "items": set(),        # globally declared item names
-                "rooms": set(),        # declared room names
-                "player_inv": set(),   # items listed in player block
+                "flags": {},            # flag_name -> "bool"
+                "items": set(),         # globally declared item names
+                "rooms": set(),         # declared room names
+                "player_inv": set(),    # items listed in player block
             },
-            "rooms": {},              # room_name -> {"items": set()}
-            "locals": {               # local condition usage by construct
+            "rooms": {},                # room_name -> {"items": set()}
+            "locals": {                 # local condition usage by construct
                 "puzzles": [],
                 "npcs": {},
             },
